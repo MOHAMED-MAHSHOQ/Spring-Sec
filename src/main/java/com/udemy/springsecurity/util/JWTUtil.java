@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -13,7 +14,7 @@ import java.util.Date;
 public class JWTUtil {
     private final String SECRET = "fjbwebfiuw-fwnf0f ewof-f fwfewkjfwnffewofofq-efewkfnlfn- ewnfwf-f ewnff-fwe";
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes());
-    private final long EXPIRATION_TIME = 1000*9;
+    private final long EXPIRATION_TIME = 1000*60*60;
     public String generateToken(String userName){
         return Jwts.builder()
                 .setSubject(userName)
@@ -32,6 +33,14 @@ public class JWTUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public boolean validateToken(String username, UserDetails userDetails,String token){
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractClaims(token).getExpiration().before(new Date());
     }
 
 }
