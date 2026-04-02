@@ -1,5 +1,6 @@
 package com.udemy.springsecurity.data;
 
+import com.udemy.springsecurity.entity.Role;
 import com.udemy.springsecurity.entity.Users;
 import com.udemy.springsecurity.repository.UserDetailsRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -17,9 +18,18 @@ public class AdminUserIntializer {
                 Users admin = new Users();
                 admin.setUserName("admin");
                 admin.setPassword(passwordEncoder.encode("admin123"));
-                admin.setRole("ROLE_ADMIN");
+                admin.setRole(Role.ADMIN);
 
                 userDetailsRepository.save(admin);
+                System.out.println("Admin saved ");
+            }
+            if(userDetailsRepository.findByUserName("user").isEmpty()){
+                Users user = new Users();
+                user.setUserName("user");
+                user.setPassword(passwordEncoder.encode("user123"));
+                user.setRole(Role.USER);
+
+                userDetailsRepository.save(user);
                 System.out.println("Admin saved ");
             }
         };

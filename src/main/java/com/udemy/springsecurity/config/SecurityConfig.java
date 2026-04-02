@@ -1,10 +1,13 @@
     package com.udemy.springsecurity.config;
 
     import com.udemy.springsecurity.CustomUserDetailsService;
+    import com.udemy.springsecurity.entity.Permissions;
+    import com.udemy.springsecurity.entity.Role;
     import com.udemy.springsecurity.filters.JwtAuthFilter;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.context.annotation.Bean;
     import org.springframework.context.annotation.Configuration;
+    import org.springframework.http.HttpMethod;
     import org.springframework.security.authentication.AuthenticationManager;
     import org.springframework.security.authentication.ProviderManager;
     import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -30,6 +33,7 @@
                     .csrf(csrf -> csrf.disable())
                     .authorizeHttpRequests(auth -> {
                         auth.requestMatchers("/authenticate").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/healthy").hasAuthority(Permissions.UPDATE.name())
                         .anyRequest().authenticated();
                     })
                     .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
