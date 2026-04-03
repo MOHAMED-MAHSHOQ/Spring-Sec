@@ -11,6 +11,7 @@
     import org.springframework.security.authentication.AuthenticationManager;
     import org.springframework.security.authentication.ProviderManager;
     import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+    import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
     import org.springframework.security.config.annotation.web.builders.HttpSecurity;
     import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
     import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +24,7 @@
 
     @Configuration
     @EnableWebSecurity
+    @EnableMethodSecurity
     public class SecurityConfig {
         @Autowired
         JwtAuthFilter jwtAuthFilter;
@@ -33,7 +35,7 @@
                     .csrf(csrf -> csrf.disable())
                     .authorizeHttpRequests(auth -> {
                         auth.requestMatchers("/authenticate").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/healthy").hasAuthority(Permissions.UPDATE.name())
+//                                .requestMatchers(HttpMethod.POST,"/healthy").hasAuthority(Permissions.UPDATE.name())
                         .anyRequest().authenticated();
                     })
                     .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
